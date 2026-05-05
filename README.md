@@ -2,7 +2,7 @@
 
 A full-stack **Issue Intake and Smart Summary System** built with **Laravel (API backend)** and **React + Vite (frontend)**.
 
-This project was developed as part of the Software Developer Practical Assessment to demonstrate practical senior-level engineering skills including:
+This project was developed as part of the Software Developer Practical Assessment to demonstrate practical development skills including:
 
 * Clean backend architecture
 * RESTful API design
