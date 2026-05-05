@@ -3,9 +3,9 @@ import axiosClient from "./axios-client";
 const ticketApi = {
     // CRUD operations for tickets
 
-    // Get all tickets
-    getTickets: () => {
-        return axiosClient.get("/tickets");
+    // Get all tickets with optional filters
+    getTickets: (params) => {
+        return axiosClient.get("/tickets", { params });
     },
     // Get a single ticket by ID
     getTicket: (id) => {

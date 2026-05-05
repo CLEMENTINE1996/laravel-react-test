@@ -21,12 +21,18 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchTickets();
-  }, []);
+  }, [ activeSearch, filterStatus, filterPriority ]);
 
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const { data } = await ticketApi.getTickets();
+      const params = {
+        search: activeSearch || null,
+        status: filterStatus === 'all' ? null : filterStatus,
+        priority: filterPriority === 'all' ? null : filterPriority,
+      };
+
+      const { data } = await ticketApi.getTickets(params);
       setTickets(data);
     } catch (err) {
       console.error("Failed to fetch tickets", err);
@@ -71,17 +77,6 @@ const HomePage = () => {
       handleSearchTrigger();
     }
   };
-
-  const filteredTickets = useMemo(() => {
-    return tickets.filter(ticket => {
-      const matchesSearch = 
-        ticket.title.toLowerCase().includes(activeSearch.toLowerCase()) || 
-        ticket.description.toLowerCase().includes(activeSearch.toLowerCase());
-      const matchesStatus = filterStatus === 'all' || ticket.status === filterStatus;
-      const matchesPriority = filterPriority === 'all' || ticket.priority === filterPriority;
-      return matchesSearch && matchesStatus && matchesPriority;
-    });
-  }, [tickets, activeSearch, filterStatus, filterPriority]);
 
   return (
     <HomeLayout>
@@ -154,7 +149,7 @@ const HomePage = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredTickets.map((ticket) => (
+            {tickets.map((ticket) => (
               <tr key={ticket.id} className="hover:bg-gray-50 transition">
                 <td className="px-6 py-4">
                   <div className="text-start text-sm font-bold text-gray-900">{ticket.title}</div>
@@ -189,7 +184,7 @@ const HomePage = () => {
           </tbody>
         </table>
         
-        {!loading && filteredTickets.length === 0 && (
+        {!loading && tickets.length === 0 && (
           <div className="text-center py-10 text-gray-500">No tickets found.</div>
         )}
       </div>
