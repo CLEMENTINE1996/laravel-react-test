@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\TicketService;
+use App\Resources\TicketResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,7 @@ class TicketController extends Controller
     {
         try {
             $tickets = $this->ticketService->getAllTickets();
-            return response()->json($tickets);
+            return response()->json(TicketResource::collection($tickets));
         } catch (Throwable $exception) {
             Log::error('TicketController: index error', ['exception' => $exception]);
             return response()->json(['message' => 'Unable to retrieve tickets.'], 500);
@@ -45,7 +46,7 @@ class TicketController extends Controller
             if (!$ticket) {
                 return response()->json(['message' => 'Ticket not found'], 404);
             }
-            return response()->json($ticket);
+            return response()->json(new TicketResource($ticket));
         } catch (Throwable $exception) {
             Log::error('TicketController: show error', ['id' => $id, 'exception' => $exception]);
             return response()->json(['message' => 'Unable to retrieve the ticket.'], 500);
@@ -69,11 +70,10 @@ class TicketController extends Controller
                 'status' => 'required|in:open,in_progress,closed',
                 'priority' => 'required|in:low,medium,high',
                 'requestor_id' => 'required|exists:users,id',
-                'assignee_id' => 'nullable|exists:users,id',
             ]);
 
             $ticket = $this->ticketService->createTicket($data);
-            return response()->json($ticket, 201);
+            return response()->json(new TicketResource($ticket), 201);
         } catch (Throwable $exception) {
             Log::error('TicketController: store error', ['data' => $request->all(), 'exception' => $exception]);
             return response()->json(['message' => 'Unable to create the ticket.'], 500);
@@ -98,14 +98,13 @@ class TicketController extends Controller
                 'status' => 'sometimes|required|in:open,in_progress,closed',
                 'priority' => 'sometimes|required|in:low,medium,high',
                 'requestor_id' => 'sometimes|required|exists:users,id',
-                'assignee_id' => 'nullable|exists:users,id',
             ]);
 
             $ticket = $this->ticketService->updateTicket($id, $data);
             if (!$ticket) {
                 return response()->json(['message' => 'Ticket not found'], 404);
             }
-            return response()->json($ticket);
+            return response()->json(new TicketResource($ticket));
         } catch (Throwable $exception) {
             Log::error('TicketController: update error', ['id' => $id, 'data' => $request->all(), 'exception' => $exception]);
             return response()->json(['message' => 'Unable to update the ticket.'], 500);

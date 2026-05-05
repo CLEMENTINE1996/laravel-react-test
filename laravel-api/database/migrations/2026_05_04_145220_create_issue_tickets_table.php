@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // this is just a simple ticket table with basic fields, we can always add more fields later as needed
+        // this is just intended to be a simple example for the purpose of this project, so we will keep it simple and not overcomplicate it with too many fields or relationships  
+
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -23,7 +26,6 @@ return new class extends Migration
             $table->boolean('is_escalated')->default(false);
 
             $table->foreignId('requestor_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('assignee_id')->nullable(true)->constrained('users')->onDelete('set null');
 
             $table->timestamps();
         });
@@ -36,7 +38,6 @@ return new class extends Migration
     {
         Schema::table('tickets', function (Blueprint $table) {
             $table->dropForeign(['requestor_id']);
-            $table->dropForeign(['assignee_id']);
         });
         Schema::dropIfExists('tickets');
     }

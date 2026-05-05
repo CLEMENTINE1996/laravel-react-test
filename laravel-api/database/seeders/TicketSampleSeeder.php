@@ -29,9 +29,8 @@ class TicketSampleSeeder extends Seeder
             'description' => 'The manager cannot access the ticket dashboard from the admin panel.',
             'category' => 'bug',
             'status' => 'open',
-            'priority' => 'high',
+            'priority' => 'low',
             'requestor_id' => $manager->id,
-            'assignee_id' => $assignee->id,
         ]);
 
         Ticket::updateOrCreate([
@@ -42,7 +41,6 @@ class TicketSampleSeeder extends Seeder
             'status' => 'in_progress',
             'priority' => 'medium',
             'requestor_id' => $manager->id,
-            'assignee_id' => $assignee->id,
         ]);
     }
 }

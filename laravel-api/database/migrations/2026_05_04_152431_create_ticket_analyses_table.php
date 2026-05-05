@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // this is just a simple ticket analysis table with basic fields, we can always add more fields later as needed
+        // this is just intended to be a simple example for the purpose of this project, so we will keep it simple and not overcomplicate it with too many fields or relationships  
+
         Schema::create('ticket_analyses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade');

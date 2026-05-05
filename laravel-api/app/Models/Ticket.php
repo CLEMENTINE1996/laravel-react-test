@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Ticket extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'description',
@@ -13,7 +16,6 @@ class Ticket extends Model
         'status',
         'priority',
         'requestor_id',
-        'assignee_id',
         'is_escalated',
     ];
 
@@ -26,13 +28,12 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'requestor_id');
     }
 
-    public function assignee()
-    {
-        return $this->belongsTo(User::class, 'assignee_id');
-    }
-
     public function analysis()
     {
         return $this->hasOne(TicketAnalysis::class)->latestOfMany();
+    }
+
+    public function getAnalysis(){
+        return $this->analysis()->first();
     }
 }

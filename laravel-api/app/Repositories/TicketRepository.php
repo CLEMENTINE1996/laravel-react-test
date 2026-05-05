@@ -23,7 +23,7 @@ class TicketRepository implements TicketRepositoryInterface
      */
     public function getTicketById($id)
     {
-        return Ticket::findOrFail($id);
+        return Ticket::find($id);
     }
 
     /**
