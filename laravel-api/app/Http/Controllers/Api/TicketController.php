@@ -21,12 +21,15 @@ class TicketController extends Controller
 
     /**
      * Display a listing of the tickets.
+     * @param Request $request - The incoming request containing filter data.
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $tickets = $this->ticketService->getAllTickets();
+            $filters = $request->only(['status', 'priority', 'search']);
+
+            $tickets = $this->ticketService->getAllTickets($filters);
             return response()->json(TicketResource::collection($tickets));
         } catch (Throwable $exception) {
             Log::error('TicketController: index error', ['exception' => $exception]);

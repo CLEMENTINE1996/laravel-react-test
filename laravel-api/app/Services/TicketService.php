@@ -17,12 +17,13 @@ class TicketService
     }
 
     /**
-     * Get all tickets.
+     * Get all tickets with optional filters.
+     * @param array $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllTickets()
+    public function getAllTickets(array $filters = [])
     {
-        return $this->ticketRepository->getAllTickets();
+        return $this->ticketRepository->getAllTickets($filters);
     }
 
     /**

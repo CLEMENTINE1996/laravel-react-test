@@ -8,12 +8,35 @@ use App\Repositories\Interfaces\TicketRepositoryInterface;
 class TicketRepository implements TicketRepositoryInterface
 {
     /**
-     * Get all tickets.
+     * Get all tickets with optional filtering.
+     * @param array $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllTickets()
+    public function getAllTickets(array $filters = [])
     {
-        return Ticket::all();
+        $query = Ticket::query();
+
+        $status = $filters['status'] ?? null;
+        $priority = $filters['priority'] ?? null;
+        $search = $filters['search'] ?? null;
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($priority) {
+            $query->where('priority', $priority);
+        }
+
+        if ($search) {
+            $searchTerm = '%' . $search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', $searchTerm)
+                ->orWhere('description', 'like', $searchTerm);
+            });
+        }
+
+        return $query->get();
     }
 
     /**

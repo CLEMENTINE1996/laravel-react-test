@@ -7,8 +7,9 @@ interface TicketRepositoryInterface
     /**
      * Get all tickets.
      * @return Collection - A collection of ticket model instances.
+     * @param array $filters 
      */
-    public function getAllTickets();
+    public function getAllTickets(array $filters);
 
     /**
      * Get a ticket by ID.
